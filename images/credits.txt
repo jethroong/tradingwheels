@@ -1,0 +1,9 @@
+https://www.svgrepo.com/
+1. portfolio.png -> https://www.svgrepo.com/svg/340858/portfolio
+2. stock_market.png -> https://www.svgrepo.com/svg/324750/shop-market-store
+3. thumbs_up.png -> https://www.svgrepo.com/svg/365818/thumbs-up-thin
+4. search.png -> https://www.svgrepo.com/svg/13652/magnifying-glass
+5. side_arrow.png -> https://www.svgrepo.com/svg/93813/up-arrow
+
+profile_picture.png -> https://pixabay.com/vectors/blank-profile-picture-mystery-man-973460/
+

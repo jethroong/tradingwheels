@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TradingWheels - Stock Market</title>
+
+    <!-- Axios API -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap JS CDN -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- JQuery CDN -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <!-- file CSS -->
+    <link rel="stylesheet" href="stock_view.css" />
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- sidebar -->
+        <div class="col-4 outer p-4">
+          <div class="sidebar h-100 py-4 px-5">
+            <!-- header -->
+            <div class="sidebar-header d-flex justify-content-between w-100">
+              <img src="images/logo.png" alt="" />
+              <img src="images/profile_picture.png" alt="" />
+            </div>
+
+            <hr />
+
+            <!-- searchbar -->
+            <div
+              class="searchbar d-flex align-items-center py-3 px-4 rounded-pill mt-4"
+            >
+              <img src="./images/search.png" class="h-100 pe-2" alt="" />
+              <input
+                type="text"
+                placeholder="Search stock"
+                class="search-input"
+              />
+            </div>
+
+            <!-- credit cards -->
+            <div class="my-5">
+              <a href="#">
+                <div
+                  class="d-flex justify-content-between align-items-center credit-card selected-credit-card p-3 my-4"
+                >
+                  <div class="d-flex">
+                    <div class="d-flex pe-4">
+                      <div class="practice-card practice-card-1">
+                        Practice card 1
+                      </div>
+                      <div class="practice-card-tail"></div>
+                    </div>
+
+                    <p class="fw-bold fs-3 m-0">
+                      <span class="fs-6 align-middle">$ </span>2 200
+                    </p>
+                  </div>
+
+                  <img src="images/side_arrow.png" class="h-100" alt="" />
+                </div>
+              </a>
+
+              <a href="#">
+                <div
+                  class="d-flex justify-content-between credit-card align-items-center p-3 my-4"
+                >
+                  <div class="d-flex">
+                    <div class="d-flex pe-4">
+                      <div class="practice-card practice-card-2">
+                        Practice card 2
+                      </div>
+                      <div class="practice-card-tail"></div>
+                    </div>
+
+                    <p class="fw-bold fs-3 m-0">
+                      <span class="fs-6 align-middle">$ </span>12 029
+                    </p>
+                  </div>
+
+                  <img src="images/side_arrow.png" class="h-100" alt="" />
+                </div>
+              </a>
+            </div>
+
+            <!-- services -->
+            <h5 class="fw-bold">Services</h5>
+
+            <div class="row">
+              <a
+                href="stock_view.html"
+                class="col services rounded text-center mx-2 py-3"
+              >
+                <img src="images/stock_market.png" alt="" class="mb-2" />
+                <p class="m-0">Stock <br />Market</p>
+              </a>
+
+              <!-- <a
+                href="portfolio_view.html"
+                class="col services rounded text-center mx-2 py-3"
+              >
+                <img src="images/portfolio.png" alt="" class="mb-2" />
+                <p class="m-0">Portfolio</p>
+              </a> -->
+
+              <a
+                href="#"
+                class="col services rounded text-center mx-2 py-3 selected-service"
+              >
+                <img src="images/thumbs_up.png" alt="" class="mb-2" />
+                <p class="m-0">Stock <br />Recommender</p>
+              </a>
+            </div>
+
+            <div
+              id="logout"
+              alt=""
+              class="mb-2 bg-dark text-white rounded mt-4"
+            >
+              <p class="m-0 text-center">Log <br />Out</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="black-bg"></div>
+
+        <!-- stock market -->
+        <div class="col">
+          <div class="container outer p-5">
+            <div class="text-white bg-black">
+              <h1 class="fw-bold">Recommendations</h1>
+
+              <p class="mt-5">Last Transacted</p>
+
+              <table class="table table-borderless">
+                <tr>
+                  <td>
+                    <div class="card mt-2">
+                      <div class="card-body">
+                        <h5 class="card-title">AAPL</h5>
+                        <p class="card-text">Close Price: 127.25</p>
+                        <a href="#" class="btn btn-primary mt-3">Buy</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <div id="container"></div>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  container = document.getElementById("container");
+  axios
+    .get(
+      "http://127.0.0.1:5005/stock_recommender/recommend_by_closeprice/<string:portfolio_id>"
+    )
+    .then((response) => {
+      data = response.data;
+      console.log(data);
+      data.foreach((result, idx) => {
+        const card = document.createElement("div");
+        card.classList = "card-body";
+        const content = `
+              <tr>
+                <td>
+                <div class="card mt-5" style="width: 28rem;">
+                  <div class="card-body">
+                    <h5 class="card-title">${result.ticker}</h5>
+                    <p class="card-text">Close Price:${result.price}</p>
+                    <a href="#" class="btn btn-primary">Buy</a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+  `;
+        container.innerHTML += content;
+      });
+    });
+
+  $("#logout").click(function () {
+    console.log('click')
+    axios
+      .get("http://localhost:5002/logout")
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+        window.location.replace("login.html");
+      });
+  });
+</script>

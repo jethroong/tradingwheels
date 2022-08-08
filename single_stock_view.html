@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TradingWheels - Stock Market</title>
+
+    <!-- Axios API -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap JS CDN -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- JQuery CDN -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- file CSS -->
+    <link rel="stylesheet" href="stock_view.css" />
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- sidebar -->
+        <div class="col-4 outer p-4">
+          <div class="sidebar h-100 py-4 px-5">
+            <!-- header -->
+            <div class="sidebar-header d-flex justify-content-between w-100">
+              <img src="images/logo.png" alt="" />
+              <img src="images/profile_picture.png" alt="" />
+            </div>
+
+            <hr />
+
+            <!-- searchbar -->
+            <div
+              class="searchbar d-flex align-items-center py-3 px-4 rounded-pill mt-4"
+            >
+              <img src="./images/search.png" class="h-100 pe-2" alt="" />
+              <input
+                type="text"
+                placeholder="Search stock"
+                class="search-input"
+              />
+            </div>
+
+            <!-- credit cards -->
+            <div class="my-5">
+              <a href="#">
+                <div
+                  class="d-flex justify-content-between align-items-center credit-card selected-credit-card p-3 my-4"
+                >
+                  <div class="d-flex">
+                    <div class="d-flex pe-4">
+                      <div class="practice-card practice-card-1">
+                        Practice card 1
+                      </div>
+                      <div class="practice-card-tail"></div>
+                    </div>
+
+                    <p class="fw-bold fs-3 m-0">
+                      <span class="fs-6 align-middle">$ </span>2 200
+                    </p>
+                  </div>
+
+                  <img src="images/side_arrow.png" class="h-100" alt="" />
+                </div>
+              </a>
+
+              <a href="#">
+                <div
+                  class="d-flex justify-content-between credit-card align-items-center p-3 my-4"
+                >
+                  <div class="d-flex">
+                    <div class="d-flex pe-4">
+                      <div class="practice-card practice-card-2">
+                        Practice card 2
+                      </div>
+                      <div class="practice-card-tail"></div>
+                    </div>
+
+                    <p class="fw-bold fs-3 m-0">
+                      <span class="fs-6 align-middle">$ </span>12 029
+                    </p>
+                  </div>
+
+                  <img src="images/side_arrow.png" class="h-100" alt="" />
+                </div>
+              </a>
+            </div>
+
+            <!-- services -->
+            <h5 class="fw-bold">Services</h5>
+
+            <div class="row">
+              <a
+                href="stock_view.html"
+                class="col services rounded text-center mx-2 py-3"
+              >
+                <img src="images/stock_market.png" alt="" class="mb-2" />
+                <p class="m-0">Stock <br />Market</p>
+              </a>
+
+              <!-- <a
+                href="portfolio_view.html"
+                class="col services rounded text-center mx-2 py-3"
+              >
+                <img src="images/portfolio.png" alt="" class="mb-2" />
+                <p class="m-0">Portfolio</p>
+              </a> -->
+
+              <a
+                href="stock_recommender_view.html"
+                class="col services rounded text-center mx-2 py-3"
+              >
+                <img src="images/thumbs_up.png" alt="" class="mb-2" />
+                <p class="m-0">Stock <br />Recommender</p>
+              </a>
+            </div>
+
+            <div
+              id="logout"
+              alt=""
+              class="mb-2 bg-dark text-white rounded mt-4"
+            >
+              <p class="m-0 text-center">Log <br />Out</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="black-bg"></div>
+
+        <!-- stock market -->
+        <div class="col">
+          <div class="container outer p-5">
+            <div class="text-white fw-bold bg-black">
+              <div class="d-flex">
+                <p
+                  id="ticker_first_letter"
+                  class="stock-picture mb-0 d-flex justify-content-center align-items-center"
+                >
+                  A
+                </p>
+                <div class="ps-4">
+                  <p id="ticker_name">ADA</p>
+                  <!-- <p class="text-muted">Cardano</p> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="fw-bold">
+              <div class="d-flex mt-5">
+                <p class="bg-white px-5 py-1 tab">TODAY</p>
+                <p class="yesterday px-5 py-1 tab">YESTERDAY</p>
+              </div>
+              <div
+                class="d-flex justify-content-between bg-white p-5 soft-shadow details-banner"
+              >
+                <div>
+                  <p class="text-muted">Average price</p>
+                  <h1 class="fw-bold" id="average">123</h1>
+                </div>
+
+                <div>
+                  <p class="text-muted">Close Price</p>
+                  <h1 class="fw-bold" id="close">123</h1>
+                  <!-- <p class="text-muted">June 16, 4.00pm</p> -->
+                </div>
+
+                <div>
+                  <p class="text-muted">Open Price</p>
+                  <h1 class="fw-bold" id="open">123</h1>
+                  <!-- <p class="text-muted">June 16, 4.00pm</p> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-5">
+              <div class="floating-banner bg-white soft-shadow p-5 fw-bold">
+                <p class="mb-3">Details</p>
+                <!-- loop stock info here  -->
+                <div class="d-flex justify-content-between">
+                  <p class="text-muted">Highest</p>
+                  <p id="highest">123</p>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <p class="text-muted">Lowest</p>
+                  <p id="lowest">123</p>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <p class="text-muted">Number</p>
+                  <p id="number">123</p>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <p class="text-muted">Volume</p>
+                  <p id="volume">123</p>
+                </div>
+              </div>
+
+              <div class="floating-banner bg-white soft-shadow p-5">
+                <div class="d-flex justify-content-around">
+                  <!-- Buying -->
+                  <div class="d-flex flex-column align-items-center">
+                    <p class="fw-bold text-muted">Price</p>
+                    <h2 class="fw-bold" id="price">123</h2>
+                    <!-- Button trigger modal -->
+                  </div>
+
+                  <!-- Selling -->
+                  <div class="d-flex flex-column align-items-center">
+                    <!-- <p class="fw-bold text-muted">Selling</p> -->
+                    <!-- <h2 class="fw-bold">123</h2> -->
+                    <button
+                      type="button"
+                      class="btn btn-purple mb-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#buyModal"
+                    >
+                      Buy
+                    </button>
+
+                    <!-- Modal -->
+                    <div
+                      class="modal fade"
+                      id="buyModal"
+                      tabindex="-1"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                              Please specify quantity to purchase
+                            </h5>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body" id="buy_body">
+                            <input
+                              type="text"
+                              class="filter-bar"
+                              id="buy_amount"
+                            />
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-success"
+                              id="buy-btn"
+                            >
+                              Buy
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Button trigger modal -->
+                    <button
+                      type="button"
+                      class="btn btn-light-purple"
+                      data-bs-toggle="modal"
+                      data-bs-target="#sellModal"
+                    >
+                      Sell
+                    </button>
+
+                    <!-- Modal -->
+                    <div
+                      class="modal fade"
+                      id="sellModal"
+                      tabindex="-1"
+                      aria-labelledby="exampleModalLabel1"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel1">
+                              Please specify quantity to sell
+                            </h5>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body" id="sell_body">
+                            <input
+                              type="text"
+                              class="filter-bar"
+                              id="sell_amount"
+                            />
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-success"
+                              id="sell-btn"
+                            >
+                              Sell
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  // retrieve ticker from url
+  let searchParams = new URLSearchParams(window.location.search);
+  if (searchParams.has("ticker")) {
+    var ticker = searchParams.get("ticker");
+    // console.log(ticker);
+
+    // call stockinfo.py to retrieve individual stock details
+    const url = "http://127.0.0.1:5005/stock_info/get_indiv_info/" + ticker;
+
+    axios
+      .get(url)
+      .then((response) => {
+        // process response.dataobject
+        // console.log(typeof(response.data))
+        console.log(response.data);
+
+        var result = response.data[0];
+
+        var close = result.c;
+        var open = result.o;
+        var average = result.vw;
+
+        var highest = result.h;
+        var lowest = result.l;
+        var number = result.n;
+        var volume = result.v;
+
+        // console.log(average)
+        $("#ticker_name").text(ticker);
+        $("#ticker_first_letter").text(ticker.charAt(0));
+
+        $("#average").text(average);
+        $("#close").text(close);
+        $("#open").text(open);
+
+        $("#highest").text(highest);
+        $("#lowest").text(lowest);
+        $("#number").text(number);
+        $("#volume").text(volume);
+
+        $("#price").text(close);
+      })
+      .catch((error) => {
+        // process error object
+        console.log("error");
+      });
+  }
+
+  // user click on buy
+  $("#buy-btn").click(function () {
+    // console.log("dasa");
+    // console.log(ticker_name);
+    $("#buy_body > p").text("");
+
+    var quantity = parseInt($("#buy_amount").val());
+    var email = document.cookie
+      .split("; ")
+      .filter(function (c) {
+        return /email=/.test(c);
+      })[0]
+      .replace(/email=/g, "");
+
+    const getuser_url = "http://127.0.0.1:5002/get_user/" + email;
+
+    // console.log(quantity,email);
+    axios
+      .get(getuser_url)
+      .then((response) => {
+        // process response.dataobject
+        var result = response.data;
+        console.log(result);
+        var user_id = result.data.user_id;
+        console.log(result.data.user_id);
+
+        const getportfolio_url =
+          "http://127.0.0.1:5003/get_portfolio/user_find/" + user_id;
+
+        axios
+          .get(getportfolio_url)
+          .then((response) => {
+            // process response.dataobject
+            var portfolio_id = response.data.data.portfolio_id;
+            console.log(portfolio_id);
+
+            // if no error,
+            var price = parseFloat($("#close").text());
+            portfolio_id = portfolio_id.replace(/-/g, "").toString();
+
+            console.log(ticker, price, quantity, portfolio_id);
+
+            const url = "http://127.0.0.1:5001/place_order/buy";
+            axios
+              .post(url, {
+                params: {
+                  ticker: ticker,
+                  price: price,
+                  quantity: quantity,
+                  order_type: "buy",
+                  portfolio_id: portfolio_id,
+                  // ticker: 'TSLA',
+                  // price: 800.5,
+                  // quantity: 1,
+                  // order_type: "buy",
+                  // portfolio_id: '023aed7f67134fc5ae59a5b7208ad450',
+                },
+              })
+              .then((response) => {
+                // process response.dataobject
+                // console.log(response.data);
+                var buy_result = response.data.message;
+                console.log(buy_result);
+                $("#buy_body").append(
+                  "<p class='succeed-text'>" + buy_result + "</p>"
+                );
+              })
+              .catch((error) => {
+                // process error object
+                console.log(error.response.data);
+                $("#sell_body").append(
+                  "<p class='error-text'>" +
+                    error.response.data.message +
+                    "</p>"
+                );
+              });
+          })
+          .catch((error) => {
+            // process error object
+          });
+      })
+      .catch((error) => {
+        // process error object
+      });
+
+    // console.log(portfolio_id);
+  });
+
+  // user click on sell
+  $("#sell-btn").click(function () {
+    // console.log("dasa");
+    // console.log(ticker_name);
+    $("#sell_body > p").text("");
+
+    var quantity = parseInt($("#sell_amount").val());
+    var email = document.cookie
+      .split("; ")
+      .filter(function (c) {
+        return /email=/.test(c);
+      })[0]
+      .replace(/email=/g, "");
+
+    const getuser_url = "http://127.0.0.1:5002/get_user/" + email;
+
+    // console.log(quantity,email);
+    axios
+      .get(getuser_url)
+      .then((response) => {
+        // process response.dataobject
+        var result = response.data;
+        console.log(result);
+        var user_id = result.data.user_id;
+        console.log(result.data.user_id);
+
+        const getportfolio_url =
+          "http://127.0.0.1:5003/get_portfolio/user_find/" + user_id;
+
+        axios
+          .get(getportfolio_url)
+          .then((response) => {
+            // process response.dataobject
+            var portfolio_id = response.data.data.portfolio_id;
+            console.log(portfolio_id);
+
+            // if no error,
+            var price = parseFloat($("#close").text());
+            portfolio_id = portfolio_id.replace(/-/g, "").toString();
+
+            console.log(ticker, price, quantity, portfolio_id);
+
+            const url = "http://127.0.0.1:5001/place_order/sell";
+            axios
+              .post(url, {
+                params: {
+                  ticker: ticker,
+                  price: price,
+                  quantity: quantity,
+                  order_type: "sell",
+                  portfolio_id: portfolio_id,
+                  // ticker: 'TSLA',
+                  // price: 800.5,
+                  // quantity: 1,
+                  // order_type: "buy",
+                  // portfolio_id: '023aed7f67134fc5ae59a5b7208ad450',
+                },
+              })
+              .then((response) => {
+                // process response.dataobject
+                // console.log(response.data);
+
+                var sell_result = response.data.message;
+                console.log(sell_result);
+                $("#sell_body").append(
+                  "<p class='succeed-text'>" + sell_result + "</p>"
+                );
+              })
+              .catch((error) => {
+                // process error object
+                console.log(error.response.data);
+                $("#sell_body").append(
+                  "<p class='error-text'>" +
+                    error.response.data.message +
+                    "</p>"
+                );
+              });
+          })
+          .catch((error) => {
+            // process error object
+          });
+      })
+      .catch((error) => {
+        // process error object
+      });
+
+    // console.log(portfolio_id);
+  });
+
+  $("#logout").click(function () {
+    axios
+      .get("http://localhost:5002/logout")
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+        window.location.replace("login.html");
+      });
+  });
+</script>

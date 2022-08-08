@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TradingWheels - Stock Market</title>
+
+    <!-- Axios API -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap JS CDN -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- JQuery CDN -->
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Vue CDN -->
+    <script src="https://unpkg.com/vue@3"></script>
+
+    <!-- file CSS -->
+    <link rel="stylesheet" href="stock_view.css" />
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- sidebar -->
+        <div class="col-4 outer p-4">
+          <div class="sidebar h-100 py-4 px-5">
+            <!-- header -->
+            <div class="sidebar-header d-flex justify-content-between w-100">
+              <img src="images/logo.png" alt="" />
+              <img src="images/profile_picture.png" alt="" />
+            </div>
+
+            <hr />
+
+            <!-- searchbar -->
+            <div
+              class="searchbar d-flex align-items-center py-3 px-4 rounded-pill mt-4"
+            >
+              <img src="./images/search.png" class="h-100 pe-2" alt="" />
+              <input
+                type="text"
+                placeholder="Search stock"
+                class="search-input"
+              />
+            </div>
+
+            <!-- credit cards -->
+            <div class="my-5">
+              <a href="#">
+                <div
+                  class="d-flex justify-content-between align-items-center credit-card selected-credit-card p-3 my-4"
+                >
+                  <div class="d-flex">
+                    <div class="d-flex pe-4">
+                      <div class="practice-card practice-card-1">
+                        Practice card 1
+                      </div>
+                      <div class="practice-card-tail"></div>
+                    </div>
+
+                    <p class="fw-bold fs-3 m-0">
+                      <span class="fs-6 align-middle">$ </span>2 200
+                    </p>
+                  </div>
+
+                  <img src="images/side_arrow.png" class="h-100" alt="" />
+                </div>
+              </a>
+
+              <a href="#">
+                <div
+                  class="d-flex justify-content-between credit-card align-items-center p-3 my-4"
+                >
+                  <div class="d-flex">
+                    <div class="d-flex pe-4">
+                      <div class="practice-card practice-card-2">
+                        Practice card 2
+                      </div>
+                      <div class="practice-card-tail"></div>
+                    </div>
+
+                    <p class="fw-bold fs-3 m-0">
+                      <span class="fs-6 align-middle">$ </span>12 029
+                    </p>
+                  </div>
+
+                  <img src="images/side_arrow.png" class="h-100" alt="" />
+                </div>
+              </a>
+            </div>
+
+            <!-- services -->
+            <h5 class="fw-bold">Services</h5>
+
+            <div class="row">
+              <a
+                href="#"
+                class="col services rounded text-center mx-2 py-3 selected-service"
+              >
+                <img src="images/stock_market.png" alt="" class="mb-2" />
+                <p class="m-0">Stock <br />Market</p>
+              </a>
+
+              <!-- <a
+                href="portfolio_view.html"
+                class="col services rounded text-center mx-2 py-3"
+              >
+                <img src="images/portfolio.png" alt="" class="mb-2" />
+                <p class="m-0">Portfolio</p>
+              </a> -->
+
+              <a
+                href="stock_recommender_view.html"
+                class="col services rounded text-center mx-2 py-3"
+              >
+                <img src="images/thumbs_up.png" alt="" class="mb-2" />
+                <p class="m-0">Stock <br />Recommender</p>
+              </a>
+            </div>
+            <div
+              id="logout"
+              alt=""
+              class="mb-2 bg-dark text-white rounded mt-4"
+            >
+              <p class="m-0 text-center">Log <br />Out</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- stock market -->
+        <div class="col">
+          <div class="container outer p-5">
+            <h1 class="fw-bold">Stock market</h1>
+
+            <table class="table table-borderless mt-5" id="app">
+              <tr>
+                <th>Markets</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Volume</th>
+              </tr>
+
+              <!-- populate stock data -->
+              <tr
+                class="selected_stock"
+                v-for="(ticker, index) of tickers"
+                @click="select_stock(ticker.T)"
+              >
+                <td>
+                  <div class="d-flex">
+                    <p
+                      class="stock-picture mb-0 d-flex justify-content-center align-items-center"
+                    >
+                      {{ticker.T.charAt(0)}}
+                    </p>
+                    <div class="ps-4">
+                      <p class="ticker">{{ticker.T}}</p>
+                      <!-- <p class="text-muted w-25">{{stock_name.at(index)}}</p> -->
+                      <p class="text-muted"></p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="high fw-bold">{{ticker.h}}</div>
+                </td>
+                <td>
+                  <div class="low fw-bold">{{ticker.l}}</div>
+                </td>
+                <td class="vol-align">
+                  {{ticker.v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  Vue.createApp({
+    data() {
+      return {
+        tickers: [],
+        stock_name: [],
+      };
+    },
+    methods: {
+      select_stock(ticker_name) {
+        // var ticker_name = $(".selected_stock").find(".ticker").text();
+        console.log("dasa");
+        console.log(ticker_name);
+        window.location.href = "single_stock_view.html?ticker=" + ticker_name;
+      },
+    },
+    mounted: function () {
+      // console.log('loaded');
+      const url = "http://127.0.0.1:5005/stock_info/get_all_stock_info";
+      axios
+        .get(url)
+        .then((response) => {
+          // process response.dataobject
+          var result = response.data.slice(0, 10);
+          this.tickers = result;
+          // console.log(result)
+
+          // for (ticker of result) {
+          //   // console.log(ticker)
+          //   var ticker_abbr = ticker.T;
+          //   // console.log(ticker_abbr)
+          //   // add more details to the ticker, e.g. logo, fullname
+
+          //   var url_indiv_info =
+          //     "http://127.0.0.1:5005/stock_info/get_indiv_info/" + ticker_abbr;
+          //   axios
+          //     .get(url_indiv_info)
+          //     .then((response) => {
+          //       // handle success
+          //       result_indiv_info = response.data;
+          //       // console.log(result_indiv_info)
+
+          //       this.stock_name.push(result_indiv_info.name);
+          //     })
+          //     .catch(function (error) {
+          //       // handle error
+          //       console.log(error);
+          //     });
+          // }
+
+          // this.tickers = tickers_arr;
+          // console.log(this.stock_name);
+        })
+        .catch((error) => {
+          // process error object
+          console.log("error");
+        });
+    },
+  }).mount("#app");
+
+  // $(".selected_stock").click(function () {
+  //   var ticker_name = $("#selected_stock").find(".ticker").text();
+  //   console.log(ticker_name);
+  //   window.location.href = "single_stock_view.html?ticker=" + ticker;
+  // });
+
+  $("#logout").click(function () {
+    axios.get("http://localhost:5002/logout").then((response) => {
+      window.location.replace("login.html");
+    });
+  });
+</script>

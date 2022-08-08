@@ -1,0 +1,126 @@
+version: "3.8"
+
+volumes:
+  rabbitmq_data:
+
+services:
+
+  ###################################
+  # User : The User microservice
+  ###################################
+  user:
+    build:
+      context: ./
+      dockerfile: user.Dockerfile
+    image: jordanteoh2020/user:esd
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://root@localhost:3306/esdproject/users
+      PYTHONUNBUFFERED: 1
+
+  ###################################
+  # Stock Recommender : The Stock Recommender microservice
+  ###################################
+  stock_recommender:
+    build:
+      context: ./
+      dockerfile: stock_recommender.Dockerfile
+    image: jordanteoh2020/stock_recommender:esd
+    restart: always
+    environment:
+      URL: http://127.0.0.1:5005/stockinfo/get_all_stock_info/
+      PYTHONUNBUFFERED: 1
+
+  ##################################
+  # stockinfo: The Book microservice
+  ##################################
+  stockinfo:
+    build:
+      context: ./
+      dockerfile: stockinfo.Dockerfile
+    image: jordanteoh2020/stockinfo:esd
+    restart: always
+    environment:
+      polygon_URL: https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/2022-04-04?adjusted=true&apiKey=JVUOJpz7eTK1LXR6J0bZxnQVnyifIbvt
+      PYTHONUNBUFFERED: 1
+
+  ###############################################
+  # Place Order: The Place Order microservice (DONE)
+  ###############################################
+  place_order:
+    build:
+      context: ./
+      dockerfile: place_order.Dockerfile
+    image: jordanteoh2020/place_order:esd
+    restart: always
+    depends_on: # (Need to edit)
+      - portfolio
+      - stockinfo
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      portfolio_URL: http://portfolio:5003/portfolio
+      stockinfo_URL: http://stockinfo:5005/stockinfo 
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5100:5100"
+
+  ###################################
+  # Positions : The Positions microservice
+  ###################################
+  positions:
+    build:
+      context: ./
+      dockerfile: positions.Dockerfile
+    image: jordanteoh2020/positions:esd
+    depends_on: # (Need to edit)
+      - portfolio
+      - user
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://root@localhost:3306/esdproject/positions
+      PYTHONUNBUFFERED: 1
+
+  #######################################################
+  # Portfolio : The Portfolio microservice (Done)
+  #######################################################
+  portfolio:
+    build:
+      context: ./
+      dockerfile: portfolio.Dockerfile
+    image: jordanteoh2020/portfolio:esd
+    restart: always
+    depends_on: # (Need to edit)
+      - user
+    environment:
+      dbURL: mysql+mysqlconnector://root@host.docker.internal:3306/esdproject/portfolios
+      PYTHONUNBUFFERED: 1
+
+  ####################################
+  # RabbitMQ: The messaging broker   (DONE)
+  ####################################
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: esd-rabbit
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes: 
+      - rabbitmq_data:/var/lib/rabbitmq
+      
+  #################################################
+  # Stock_Logging: The Stock_Logging microservice (DONE)
+  #################################################
+  stock_logging:
+    build:
+      context: ./
+      dockerfile: stock_logging.Dockerfile
+    image: jordanteoh2020/stock_logging:esd
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      PYTHONUNBUFFERED: 1
